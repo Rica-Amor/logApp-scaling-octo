@@ -1,8 +1,29 @@
 <?php
-  
+	require('config/config.php');
+	require('config/db.php');
+	if(isset($_POST['submit'])){
+		$username = mysqli_real_escape_string($conn,$_POST['username']);
+		$password = mysqli_real_escape_string($conn,$_POST['password']);
 
+		if ($username != "" && $password != ""){
 
+			$query = "select count(*) as cntUser from login where username='".$username."' and password='".$password."'";
+			$result = mysqli_query($conn,$query);
+			$row = mysqli_fetch_array($result);
 
+			$count = $row['cntUser'];
+
+			if($count > 0){
+            $_SESSION['username'] = $username;
+            header('Location: guestbook-list.php');
+			}else{
+				echo "Invalid username and password";
+				}
+
+		}
+
+	}
+	// Source: https://makitweb.com/create-simple-login-page-with-php-and-mysql/
 ?>
 <?php include('inc/header.php'); ?>
   <br/>
